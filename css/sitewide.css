@@ -1,0 +1,306 @@
+/*----PARADIDDLES--------*/
+.centre, .center
+{
+	text-align:center;
+}
+
+.fineprint, .smallprint
+{
+	font-size:smaller;
+}
+
+.pushdown
+{
+	margin-top:1em;
+}
+
+.textright
+{
+	text-align:right;
+}
+
+.imagefortextflow
+{
+	vertical-align:text-top;
+}
+
+code.block
+{
+	white-space:pre;
+	color:#770000;
+}
+
+code.block .reverso
+{
+	background-color:#770000;
+	color:white;
+}
+
+.important
+{
+	color:red;
+}
+
+.smallcaps
+{
+	font-variant:small-caps;
+}
+
+.linethrough
+{
+	text-decoration:line-through;
+}
+
+select option.aqua
+{
+	color:aqua;
+}
+
+select option.black
+{
+	color:black;
+}
+
+select option.blue
+{
+	color:blue;
+}
+
+
+select option.fuchsia
+{
+	color:fuchsia;
+}
+
+
+select option.gray
+{
+	color:gray;
+}
+
+
+select option.green
+{
+	color:green;
+}
+
+
+select option.lime
+{
+	color:lime;
+}
+
+
+select option.maroon
+{
+	color:maroon;
+}
+
+
+select option.navy
+{
+	color:navy;
+}
+
+
+select option.olive
+{
+	color:olive;
+}
+
+
+select option.purple
+{
+	color:purple;
+}
+
+
+select option.red
+{
+	color:red;
+}
+
+
+select option.silver
+{
+	color:silver;
+}
+
+
+select option.teal
+{
+	color:teal;
+}
+
+
+select option.white
+{
+	color:black;	/*yes!*/
+}
+
+
+select option.yellow
+{
+	color:yellow;
+}
+
+
+/*----/PARADIDDLES--------*/
+
+
+/*----TAGS----*/
+body
+{
+	background-image:url(../img/mars_ice_age_240.gif), url(../img/mars_panorama_800.gif), url(../img/black_to_mars_grad.png);
+	background-position:top left, bottom center, top left;
+	background-repeat:no-repeat, no-repeat, repeat-x;
+	background-size:auto, contain, contain;
+	background-color:black;
+	/*background-attachment:fixed, fixed, fixed;*/
+}
+
+table
+{
+	border-collapse:collapse;
+	/*table-layout:fixed;
+	width:60px;*/
+	font-size:smaller;
+}
+
+table, thead, tbody, tfoot, tr, th, td
+{
+	/*border:1px solid #cccccc;*/
+	border:1px solid sienna;
+}
+
+h1, h2, h3
+{
+	font-family:serif;
+	letter-spacing:0.05em;
+}
+
+h1
+{
+	font-size:1.5em;
+	
+	text-shadow:1px -1px 6px #FF0000;
+}
+
+h2
+{
+	font-size:1.3em;
+	
+}
+
+h3
+{
+	font-size:1.1em;
+	
+}
+
+li
+{
+	margin-top:0.5em;
+	margin-bottom:0.5em;
+}
+
+textarea
+{
+	border-color:peru;
+	border-style:solid;
+	border-width:1px;
+	border-radius:0.5em;
+	background-image:url(../img/worn_dots_colourised.png);
+	color:#770000;
+}
+
+input[type="checkbox"]
+{
+	/*border:1px solid sienna;*/
+}
+/*----/TAGS----*/
+
+
+/*----STRUCTURE----*/
+optgroup.one
+{
+	color:black;
+}
+
+optgroup.two
+{
+	color:darkred;
+}
+
+optgroup.three
+{
+	color:sienna;
+}
+
+optgroup.four
+{
+	color:peru;
+}
+
+#console
+{
+	font-family:monospace;
+	border:1px solid peru;
+	border-radius:0.5em;
+	padding:0.5em;
+	height:400px;
+	overflow:auto;
+	background-image:url(../img/lightmesh_colourised.png);
+}
+
+
+
+.pagecontent
+{
+	background-color:white;
+	/*	
+	border-radius:1em;
+	margin-bottom:2em;
+	margin-top:1.5em;
+	*/
+	opacity:0.95;
+	margin-top:2em;
+	margin-bottom:4em;
+	padding-top:1em;
+	border-radius:0.75em;
+	font-family:sans-serif;
+}
+
+
+
+#arena
+{
+	background-color:#CCCCCC;
+	background-image:url(../img/game/mars_surface_brown.jpg);
+	/*
+	width:400px;
+	height:400px;
+	*/
+}
+
+#canvas_container
+{
+	text-align:center;
+}
+
+#footer
+{
+	text-align:center;
+	font-size:smaller;
+	margin-top:0.75em;
+	margin-bottom:0.5em;
+}
+
+.cpu_preset_box
+{
+	/*border:1px solid #CCCCCC;*/
+	/*padding:1%;*/
+}
+
+/*----STRUCTURE----*/
+

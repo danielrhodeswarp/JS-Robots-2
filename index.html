@@ -1,0 +1,835 @@
+<html>
+<head>
+
+<meta charset="utf-8">
+
+<!-- METAS HERE -->
+<!--
+$this->headMeta()->appendName('keywords', 'jsrobots, javascript, programming game, robots, upa, crobots, learn programming');
+$this->headMeta()->appendName('description', 'Fight to the death with JS Robots! A JavaScript programming game.');
+$this->headMeta()->appendName('author', 'Warp Asylum Ltd');
+-->
+
+<title>JS Robots</title>
+
+<link rel="stylesheet" type="text/css" href="css/960/960.css">
+<link rel="stylesheet" type="text/css" href="css/sitewide.css">
+
+<!-- SCRIPTS HERE -->
+<script src="js/scoring.js"></script>
+<script src="js/user_interface.js"></script>
+<script src="js/maths.js"></script>
+<script src="js/robot.js"></script>
+<script src="js/missile.js"></script>
+<script src="js/explosion.js"></script>
+<script src="js/arena.js"></script>
+<script src="js/game.js"></script>
+<script src="js/userland.js"></script>
+<script src="js/utility.js"></script>
+<script src="js/sfx_server.js"></script>
+<script src="js/main.js"></script>
+
+
+
+</head>
+<body>
+<div class="container_12 pagecontent">
+
+<!-- CONTENT HERE -->
+<div class="grid_12">
+	<div class="grid_2 prefix_3 alpha">
+		<button type="button" id="sound_button" onclick="toggleSfx();" title="Mute"><img src="img/icon/sound_mute.png" id="sound_button_img" alt="Mute"></button>
+	</div>
+	<div class="grid_2 centre">
+		<h1 style="margin-top:0;">JS Robots</h1>
+		<noscript><p>JS Robots is a JavaScript programming game and is simply no fun with JavaScript disabled :-(</p></noscript>
+	</div>
+	<div class="grid_2">
+		<!--
+		<button type="button" onclick="playButton();" title="Play (again)"><img src="img/icon/control_play_blue.png" alt="Play (again)"></button>
+		<button type="button" onclick="stopButton();" title="Stop"><img src="img/icon/control_stop_blue.png" alt="Stop"></button>
+		<button type="button" onclick="pauseButton();" title="Pause/unpause"><img src="img/icon/control_pause_blue.png" alt="Pause/unpause"></button>
+		-->
+		<button type="button" onclick="restartButton();" title="Restart"><img src="img/icon/control_repeat_blue.png" alt="Restart"></button>
+		<button type="button" id="play_and_pause_button" onclick="playAndPauseButton();" title="Play"><img id="play_and_pause_button_img" src="img/icon/control_play_blue.png" alt="Play"></button>
+	</div>
+	<div class="grid_3 omega textright">
+		<img src="img/icon/help.png" alt="" class="imagefortextflow"><a href="howtoplay.html">how to play</a>
+		<img src="img/icon/information.png" alt="" style="margin-left:2em;" class="imagefortextflow"><a href="about.html">about</a>
+	</div>
+</div>
+<div class="grid_12">
+	<div class="grid_1 alpha">
+		Enter your CPU player presets below (you'll probably need to scroll!) &darr; 
+	</div>
+	<div class="grid_1">
+		<table>
+			<thead>
+				<tr><th>CPU</th></tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>
+						<table>
+							<thead><tr><th colspan="2">1</th></tr></thead>
+							<tbody>
+								<tr><td>Damage</td><td id="cpu_1_damage" style="width:3em;">&nbsp;&nbsp;&nbsp;</td></tr>
+								<tr><td>Speed</td><td id="cpu_1_speed" style="width:3em;">&nbsp;&nbsp;&nbsp;</td></tr>
+								<tr><td>Heading</td><td id="cpu_1_heading" style="width:3em;">&nbsp;&nbsp;&nbsp;</td></tr>
+								<tr><td>Scan</td><td id="cpu_1_scan" style="width:3em;">&nbsp;&nbsp;&nbsp;</td></tr>
+							</tbody>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<table>
+							<thead><tr><th colspan="2">2</th></tr></thead>
+							<tbody>
+								<tr><td>Damage</td><td id="cpu_2_damage" style="width:3em;">&nbsp;&nbsp;&nbsp;</td></tr>
+								<tr><td>Speed</td><td id="cpu_2_speed" style="width:3em;">&nbsp;&nbsp;&nbsp;</td></tr>
+								<tr><td>Heading</td><td id="cpu_2_heading" style="width:3em;">&nbsp;&nbsp;&nbsp;</td></tr>
+								<tr><td>Scan</td><td id="cpu_2_scan" style="width:3em;">&nbsp;&nbsp;&nbsp;</td></tr>
+							</tbody>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<table>
+							<thead><tr><th colspan="2">3</th></tr></thead>
+							<tbody>
+								<tr><td>Damage</td><td id="cpu_3_damage" style="width:3em;">&nbsp;&nbsp;&nbsp;</td></tr>
+								<tr><td>Speed</td><td id="cpu_3_speed" style="width:3em;">&nbsp;&nbsp;&nbsp;</td></tr>
+								<tr><td>Heading</td><td id="cpu_3_heading" style="width:3em;">&nbsp;&nbsp;&nbsp;</td></tr>
+								<tr><td>Scan</td><td id="cpu_3_scan" style="width:3em;">&nbsp;&nbsp;&nbsp;</td></tr>
+							</tbody>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<table>
+							<thead><tr><th colspan="2">4</th></tr></thead>
+							<tbody>
+								<tr><td>Damage</td><td id="cpu_4_damage" style="width:3em;">&nbsp;&nbsp;&nbsp;</td></tr>
+								<tr><td>Speed</td><td id="cpu_4_speed" style="width:3em;">&nbsp;&nbsp;&nbsp;</td></tr>
+								<tr><td>Heading</td><td id="cpu_4_heading" style="width:3em;">&nbsp;&nbsp;&nbsp;</td></tr>
+								<tr><td>Scan</td><td id="cpu_4_scan" style="width:3em;">&nbsp;&nbsp;&nbsp;</td></tr>
+							</tbody>
+						</table>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="grid_8" id="canvas_container">
+		<canvas id="arena" width="500" height="500">
+			Your browser does not support the HTML5 canvas element.
+		</canvas>
+	</div>
+	<div class="grid_1">
+		<table>
+			<thead>
+				<tr><th>Human</th></tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>
+						<table>
+							<thead><tr><th colspan="2">1</th></tr></thead>
+							<tbody>
+								<tr><td>Damage</td><td id="player_1_damage" style="width:3em;">&nbsp;&nbsp;&nbsp;</td></tr>
+								<tr><td>Speed</td><td id="player_1_speed" style="width:3em;">&nbsp;&nbsp;&nbsp;</td></tr>
+								<tr><td>Heading</td><td id="player_1_heading" style="width:3em;">&nbsp;&nbsp;&nbsp;</td></tr>
+								<tr><td>Scan</td><td id="player_1_scan" style="width:3em;">&nbsp;&nbsp;&nbsp;</td></tr>
+							</tbody>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<table>
+							<thead><tr><th colspan="2">2</th></tr></thead>
+							<tbody>
+								<tr><td>Damage</td><td id="player_2_damage" style="width:3em;">&nbsp;&nbsp;&nbsp;</td></tr>
+								<tr><td>Speed</td><td id="player_2_speed" style="width:3em;">&nbsp;&nbsp;&nbsp;</td></tr>
+								<tr><td>Heading</td><td id="player_2_heading" style="width:3em;">&nbsp;&nbsp;&nbsp;</td></tr>
+								<tr><td>Scan</td><td id="player_2_scan" style="width:3em;">&nbsp;&nbsp;&nbsp;</td></tr>
+							</tbody>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<table>
+							<thead><tr><th colspan="2">3</th></tr></thead>
+							<tbody>
+								<tr><td>Damage</td><td id="player_3_damage" style="width:3em;">&nbsp;&nbsp;&nbsp;</td></tr>
+								<tr><td>Speed</td><td id="player_3_speed" style="width:3em;">&nbsp;&nbsp;&nbsp;</td></tr>
+								<tr><td>Heading</td><td id="player_3_heading" style="width:3em;">&nbsp;&nbsp;&nbsp;</td></tr>
+								<tr><td>Scan</td><td id="player_3_scan" style="width:3em;">&nbsp;&nbsp;&nbsp;</td></tr>
+							</tbody>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<table>
+							<thead><tr><th colspan="2">4</th></tr></thead>
+							<tbody>
+								<tr><td>Damage</td><td id="player_4_damage" style="width:3em;">&nbsp;&nbsp;&nbsp;</td></tr>
+								<tr><td>Speed</td><td id="player_4_speed" style="width:3em;">&nbsp;&nbsp;&nbsp;</td></tr>
+								<tr><td>Heading</td><td id="player_4_heading" style="width:3em;">&nbsp;&nbsp;&nbsp;</td></tr>
+								<tr><td>Scan</td><td id="player_4_scan" style="width:3em;">&nbsp;&nbsp;&nbsp;</td></tr>
+							</tbody>
+						</table>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="grid_1 omega">
+		Enter your human player presets or source code below (you'll probably need to scroll!) &darr;
+	</div>
+</div>
+<div class="grid_4 prefix_4 centre pushdown">
+	<h2>CPU players</h2>
+</div>
+<div class="grid_12">
+	<div class="grid_3 alpha cpu_preset_box">
+		<strong>1</strong>
+		<input type="checkbox" id="cpu_1_on" checked="checked">
+		Colour
+		<select id="cpu_1_color"><option value="aqua" class="aqua">Aqua</option><option value="black" class="black">Black</option><option value="blue" class="blue" selected="selected">Blue</option><option value="fuchsia" class="fuchsia">Fuchsia</option><option value="gray" class="gray">Gray</option><option value="green" class="green">Green</option><option value="lime" class="lime">Lime</option><option value="maroon" class="maroon">Maroon</option><option value="navy" class="navy">Navy</option><option value="olive" class="olive">Olive</option><option value="purple" class="purple">Purple</option><option value="red" class="red">Red</option><option value="silver" class="silver">Silver</option><option value="teal" class="teal">Teal</option><option value="white" class="white">White</option><option value="yellow" class="yellow">Yellow</option></select>
+		<br>
+		<select id="cpu_1_program" ><optgroup label="Tower" class="one"><option value="normal_tower">Normal Tower</option><option value="defensive_tower">Defensive Tower</option><option value="aggressive_tower">Aggressive Tower</option></optgroup><optgroup label="Sniper" class="two"><option value="camping_sniper">Camping Sniper</option><option value="hunting_sniper">Hunting Sniper</option></optgroup><optgroup label="Guard" class="three"><option value="perimeter_guard">Perimeter Guard</option><option value="radius_guard">Radius Guard</option></optgroup><optgroup label="Miscellaneous" class="four"><option value="mosquito">Mosquito</option></optgroup></select>
+	</div>
+	<div class="grid_3 cpu_preset_box">
+		<strong>2</strong>
+		<input type="checkbox" id="cpu_2_on" checked="checked">
+		Colour
+		<select id="cpu_2_color"><option value="aqua" class="aqua">Aqua</option><option value="black" class="black">Black</option><option value="blue" class="blue">Blue</option><option value="fuchsia" class="fuchsia">Fuchsia</option><option value="gray" class="gray">Gray</option><option value="green" class="green" selected="selected">Green</option><option value="lime" class="lime">Lime</option><option value="maroon" class="maroon">Maroon</option><option value="navy" class="navy">Navy</option><option value="olive" class="olive">Olive</option><option value="purple" class="purple">Purple</option><option value="red" class="red">Red</option><option value="silver" class="silver">Silver</option><option value="teal" class="teal">Teal</option><option value="white" class="white">White</option><option value="yellow" class="yellow">Yellow</option></select>
+		<br>
+		<select id="cpu_2_program" ><optgroup label="Tower" class="one"><option value="normal_tower">Normal Tower</option><option value="defensive_tower">Defensive Tower</option><option value="aggressive_tower">Aggressive Tower</option></optgroup><optgroup label="Sniper" class="two"><option value="camping_sniper">Camping Sniper</option><option value="hunting_sniper">Hunting Sniper</option></optgroup><optgroup label="Guard" class="three"><option value="perimeter_guard">Perimeter Guard</option><option value="radius_guard">Radius Guard</option></optgroup><optgroup label="Miscellaneous" class="four"><option value="mosquito" selected="selected">Mosquito</option></optgroup></select>
+	</div>
+	<div class="grid_3 cpu_preset_box">
+		<strong>3</strong>
+		<input type="checkbox" id="cpu_3_on">
+		Colour
+		<select id="cpu_3_color"><option value="aqua" class="aqua">Aqua</option><option value="black" class="black">Black</option><option value="blue" class="blue">Blue</option><option value="fuchsia" class="fuchsia">Fuchsia</option><option value="gray" class="gray">Gray</option><option value="green" class="green">Green</option><option value="lime" class="lime">Lime</option><option value="maroon" class="maroon" selected="selected">Maroon</option><option value="navy" class="navy">Navy</option><option value="olive" class="olive">Olive</option><option value="purple" class="purple">Purple</option><option value="red" class="red">Red</option><option value="silver" class="silver">Silver</option><option value="teal" class="teal">Teal</option><option value="white" class="white">White</option><option value="yellow" class="yellow">Yellow</option></select>
+		<br>
+		<select id="cpu_3_program" ><optgroup label="Tower" class="one"><option value="normal_tower">Normal Tower</option><option value="defensive_tower">Defensive Tower</option><option value="aggressive_tower">Aggressive Tower</option></optgroup><optgroup label="Sniper" class="two"><option value="camping_sniper">Camping Sniper</option><option value="hunting_sniper">Hunting Sniper</option></optgroup><optgroup label="Guard" class="three"><option value="perimeter_guard">Perimeter Guard</option><option value="radius_guard">Radius Guard</option></optgroup><optgroup label="Miscellaneous" class="four"><option value="mosquito">Mosquito</option></optgroup></select>
+	</div>
+	<div class="grid_3 omega cpu_preset_box">
+		<strong>4</strong>
+		<input type="checkbox" id="cpu_4_on">
+		Colour
+		<select id="cpu_4_color"><option value="aqua" class="aqua">Aqua</option><option value="black" class="black">Black</option><option value="blue" class="blue">Blue</option><option value="fuchsia" class="fuchsia">Fuchsia</option><option value="gray" class="gray">Gray</option><option value="green" class="green">Green</option><option value="lime" class="lime">Lime</option><option value="maroon" class="maroon">Maroon</option><option value="navy" class="navy">Navy</option><option value="olive" class="olive">Olive</option><option value="purple" class="purple" selected="selected">Purple</option><option value="red" class="red">Red</option><option value="silver" class="silver">Silver</option><option value="teal" class="teal">Teal</option><option value="white" class="white">White</option><option value="yellow" class="yellow">Yellow</option></select>
+		<br>
+		<select id="cpu_4_program" ><optgroup label="Tower" class="one"><option value="normal_tower">Normal Tower</option><option value="defensive_tower">Defensive Tower</option><option value="aggressive_tower">Aggressive Tower</option></optgroup><optgroup label="Sniper" class="two"><option value="camping_sniper">Camping Sniper</option><option value="hunting_sniper">Hunting Sniper</option></optgroup><optgroup label="Guard" class="three"><option value="perimeter_guard">Perimeter Guard</option><option value="radius_guard">Radius Guard</option></optgroup><optgroup label="Miscellaneous" class="four"><option value="mosquito">Mosquito</option></optgroup></select>
+	</div>
+</div>
+<div class="grid_4 prefix_4 centre pushdown">
+	<h2>Human players</h2>
+</div>
+<div class="grid_12">
+	<div class="grid_6 alpha">
+		<input type="checkbox" id="player_1_on" checked="checked">
+		<strong>1</strong>
+		Base on
+		<select id="player_1_program" onchange="setPlayer(1, this.value);"><option value="blank">blank</option><optgroup label="Tower" class="one"><option value="normal_tower">Normal Tower</option><option value="defensive_tower">Defensive Tower</option><option value="aggressive_tower">Aggressive Tower</option></optgroup><optgroup label="Sniper" class="two"><option value="camping_sniper">Camping Sniper</option><option value="hunting_sniper">Hunting Sniper</option></optgroup><optgroup label="Guard" class="three"><option value="perimeter_guard">Perimeter Guard</option><option value="radius_guard">Radius Guard</option></optgroup><optgroup label="Miscellaneous" class="four"><option value="mosquito">Mosquito</option></optgroup></select>
+		Colour
+		<select id="player_1_color"><option value="aqua" class="aqua" selected="selected">Aqua</option><option value="black" class="black">Black</option><option value="blue" class="blue">Blue</option><option value="fuchsia" class="fuchsia">Fuchsia</option><option value="gray" class="gray">Gray</option><option value="green" class="green">Green</option><option value="lime" class="lime">Lime</option><option value="maroon" class="maroon">Maroon</option><option value="navy" class="navy">Navy</option><option value="olive" class="olive">Olive</option><option value="purple" class="purple">Purple</option><option value="red" class="red">Red</option><option value="silver" class="silver">Silver</option><option value="teal" class="teal">Teal</option><option value="white" class="white">White</option><option value="yellow" class="yellow">Yellow</option></select>
+		<textarea id="player_1_program_source" style="width:98%;" rows="25" cols="60"></textarea>
+		<script type="text/javascript">
+			document.getElementById('player_1_program_source').onkeydown = catchTab;
+		</script>
+	</div>
+	<div class="grid_6 omega">
+		<input type="checkbox" id="player_2_on">
+		<strong>2</strong>
+		Base on
+		<select id="player_2_program" onchange="setPlayer(2, this.value);"><option value="blank">blank</option><optgroup label="Tower" class="one"><option value="normal_tower">Normal Tower</option><option value="defensive_tower">Defensive Tower</option><option value="aggressive_tower">Aggressive Tower</option></optgroup><optgroup label="Sniper" class="two"><option value="camping_sniper">Camping Sniper</option><option value="hunting_sniper">Hunting Sniper</option></optgroup><optgroup label="Guard" class="three"><option value="perimeter_guard">Perimeter Guard</option><option value="radius_guard">Radius Guard</option></optgroup><optgroup label="Miscellaneous" class="four"><option value="mosquito">Mosquito</option></optgroup></select>
+		Colour
+		<select id="player_2_color"><option value="aqua" class="aqua">Aqua</option><option value="black" class="black">Black</option><option value="blue" class="blue">Blue</option><option value="fuchsia" class="fuchsia">Fuchsia</option><option value="gray" class="gray">Gray</option><option value="green" class="green">Green</option><option value="lime" class="lime" selected="selected">Lime</option><option value="maroon" class="maroon">Maroon</option><option value="navy" class="navy">Navy</option><option value="olive" class="olive">Olive</option><option value="purple" class="purple">Purple</option><option value="red" class="red">Red</option><option value="silver" class="silver">Silver</option><option value="teal" class="teal">Teal</option><option value="white" class="white">White</option><option value="yellow" class="yellow">Yellow</option></select>
+		<textarea id="player_2_program_source" style="width:98%;" rows="25" cols="60"></textarea>
+		<script type="text/javascript">
+			document.getElementById('player_2_program_source').onkeydown = catchTab;
+		</script>
+	</div>
+</div>
+<div class="grid_12">
+	<div class="grid_6 alpha">
+		<input type="checkbox" id="player_3_on">
+		<strong>3</strong>
+		Base on
+		<select id="player_3_program" onchange="setPlayer(3, this.value);"><option value="blank">blank</option><optgroup label="Tower" class="one"><option value="normal_tower">Normal Tower</option><option value="defensive_tower">Defensive Tower</option><option value="aggressive_tower">Aggressive Tower</option></optgroup><optgroup label="Sniper" class="two"><option value="camping_sniper">Camping Sniper</option><option value="hunting_sniper">Hunting Sniper</option></optgroup><optgroup label="Guard" class="three"><option value="perimeter_guard">Perimeter Guard</option><option value="radius_guard">Radius Guard</option></optgroup><optgroup label="Miscellaneous" class="four"><option value="mosquito">Mosquito</option></optgroup></select>
+		Colour
+		<select id="player_3_color"><option value="aqua" class="aqua">Aqua</option><option value="black" class="black">Black</option><option value="blue" class="blue">Blue</option><option value="fuchsia" class="fuchsia">Fuchsia</option><option value="gray" class="gray">Gray</option><option value="green" class="green">Green</option><option value="lime" class="lime">Lime</option><option value="maroon" class="maroon">Maroon</option><option value="navy" class="navy">Navy</option><option value="olive" class="olive">Olive</option><option value="purple" class="purple">Purple</option><option value="red" class="red" selected="selected">Red</option><option value="silver" class="silver">Silver</option><option value="teal" class="teal">Teal</option><option value="white" class="white">White</option><option value="yellow" class="yellow">Yellow</option></select>
+		<textarea id="player_3_program_source" style="width:98%;" rows="25" cols="60"></textarea>
+		<script type="text/javascript">
+			document.getElementById('player_3_program_source').onkeydown = catchTab;
+		</script>
+	</div>
+	<div class="grid_6 omega">
+		<input type="checkbox" id="player_4_on">
+		<strong>4</strong>
+		Base on
+		<select id="player_4_program" onchange="setPlayer(4, this.value);"><option value="blank">blank</option><optgroup label="Tower" class="one"><option value="normal_tower">Normal Tower</option><option value="defensive_tower">Defensive Tower</option><option value="aggressive_tower">Aggressive Tower</option></optgroup><optgroup label="Sniper" class="two"><option value="camping_sniper">Camping Sniper</option><option value="hunting_sniper">Hunting Sniper</option></optgroup><optgroup label="Guard" class="three"><option value="perimeter_guard">Perimeter Guard</option><option value="radius_guard">Radius Guard</option></optgroup><optgroup label="Miscellaneous" class="four"><option value="mosquito">Mosquito</option></optgroup></select>
+		Colour
+		<select id="player_4_color"><option value="aqua" class="aqua">Aqua</option><option value="black" class="black">Black</option><option value="blue" class="blue">Blue</option><option value="fuchsia" class="fuchsia" selected="selected">Fuchsia</option><option value="gray" class="gray">Gray</option><option value="green" class="green">Green</option><option value="lime" class="lime">Lime</option><option value="maroon" class="maroon">Maroon</option><option value="navy" class="navy">Navy</option><option value="olive" class="olive">Olive</option><option value="purple" class="purple">Purple</option><option value="red" class="red">Red</option><option value="silver" class="silver">Silver</option><option value="teal" class="teal">Teal</option><option value="white" class="white">White</option><option value="yellow" class="yellow">Yellow</option></select>
+		<textarea id="player_4_program_source" style="width:98%;" rows="25" cols="60"></textarea>
+		<script type="text/javascript">
+			document.getElementById('player_4_program_source').onkeydown = catchTab;
+		</script>
+	</div>
+</div>
+
+<!--presets go here-->
+<!--any good ways to, locally, load these in from the js/robots/* files??-->
+<div style="display:none;">
+	<textarea id="blank" rows="25" cols="60"></textarea>
+	<textarea id="normal_tower" rows="25" cols="60">//NORMAL TOWER
+//
+//Scan constantly and shoot at most recently found target
+//
+
+if(!this.scanAngle)	//One-off initialisation
+{
+	this.scanAngle = rand(360);
+	this.currentTargetAngle = 0;
+	this.currentTargetRange = 0;
+	this.gotFirstTarget = false;
+}
+
+var range = this.scan(this.scanAngle, 5);
+
+if(range)	//Update shooting angle if new target found
+{
+	this.gotFirstTarget = true;
+	this.currentTargetAngle = this.scanAngle;
+	this.currentTargetRange = range;
+}
+
+//Fire at current angle and range
+if(this.gotFirstTarget)
+{
+	this.cannon(this.currentTargetAngle, this.currentTargetRange);
+}
+
+this.scanAngle += 10;</textarea>
+	<textarea id="defensive_tower" rows="25" cols="60">//DEFENSIVE TOWER
+//
+//Scan constantly and shoot at most recently found target
+//IF we have taken damage
+//
+
+if(!this.scanAngle)	//One-off initialisation
+{
+	this.scanAngle = rand(360);
+	this.currentTargetAngle = 0;
+	this.currentTargetRange = 0;
+	this.gotFirstTarget = false;
+	this.currentDamage = 0;
+}
+
+var range = this.scan(this.scanAngle, 5);
+
+if(range)	//Update shooting angle if new target found
+{
+	this.gotFirstTarget = true;
+	this.currentTargetAngle = this.scanAngle;
+	this.currentTargetRange = range;
+}
+
+//Fire at current angle and range IF we've taken a hit
+if(this.gotFirstTarget && (this.damage() != this.currentDamage))
+{
+	this.cannon(this.currentTargetAngle, this.currentTargetRange);
+}
+
+this.scanAngle += 10;
+this.currentDamage = this.damage();</textarea>
+	<textarea id="aggressive_tower" rows="25" cols="60">//AGGRESSIVE TOWER
+//
+//Scan constantly and shoot at target if found
+//ELSE lob a random missile for the sake of it!
+//
+
+if(!this.scanAngle)	//One-off initialisation
+{
+	this.scanAngle = rand(360);
+}
+
+var range = this.scan(this.scanAngle, 10);
+
+if(range)
+{
+	this.cannon(this.scanAngle, range);
+}
+
+//Go wild!
+else
+{
+	//Add 50 so we don't hit ourself!
+	this.cannon(rand(360), rand(300) + 50);
+}
+
+this.scanAngle += 20;</textarea>
+	<textarea id="camping_sniper" rows="25" cols="60">//CAMPING SNIPER
+//
+//Hide in a random corner for easier scanning
+//
+//
+
+//Helper method
+this.closeToWall = function()
+{
+	var x = this.loc_x();
+	var y = this.loc_y();
+
+	if(x < 10 || x > 490)
+	{
+		return true;
+	}
+
+	if(y < 10 || y > 490)
+	{
+		return true;
+	}
+
+	return false;
+};
+
+this.getRandomCorner = function()
+{
+	var decider = rand(1000);
+	
+	var x = 499;
+	if(decider < 500)
+	{
+		x = 0;
+	}
+	
+	decider = rand(1000);
+	
+	var y = 499;
+	if(decider < 500)
+	{
+		y = 0;
+	}
+	
+	return {x:x, y:y};	//Object literal
+};
+
+this.getScanAnglesForCorner = function(corner)
+{
+	if(corner.x == 0 && corner.y == 0)
+	{
+		return {min:90, max:180};
+	}
+	
+	if(corner.x == 499 && corner.y == 0)
+	{
+		return {min:180, max:270};
+	}
+	
+	if(corner.x == 499 && corner.y == 499)
+	{
+		return {min:270, max:359};
+	}
+	
+	if(corner.x == 0 && corner.y == 499)
+	{
+		return {min:0, max:90};
+	}
+};
+
+this.getHeadingToXY = function(x, y)
+{
+	var heading;
+	
+	var curx = this.loc_x();
+	var cury = this.loc_y();
+	
+	var dx = curx - x;
+	var dy = cury - y;
+	
+	//atan() only returns -90 to +90, so figure out how to use
+	//the atan() value
+	if(dx == 0)	//x is zero, we either move due north or south
+	{
+		if(y > cury)
+		{
+			heading = 180;	//South
+		}
+		
+		else
+		{
+			heading = 0;	//North
+		}
+	}
+	
+	else
+	{
+		if(y < cury)
+		{
+			if(x > curx)
+			{
+				heading = atan(dy / dx);	//NORTH EAST
+			}
+			
+			else
+			{
+				heading = 180 + atan(dy / dx);	//NORTH WEST
+			}
+        }
+        
+        else
+        {
+        	if(x > curx)
+        	{
+        		heading = 360 + atan(dy / dx);	//SOUTH EAST
+        	}
+        	
+        	else
+        	{
+        		heading = 180 + atan(dy / dx);	//SOUTH WEST
+        	}
+        }
+    }
+    
+    return heading;
+};
+
+//Init
+if(!this.corner)
+{
+	this.corner = this.getRandomCorner();
+	this.heading = this.getHeadingToXY(this.corner.x, this.corner.y);
+	
+	var scanAngles = this.getScanAnglesForCorner(this.corner);
+	this.scanMin = scanAngles.min;
+	this.scanMax = scanAngles.max;
+	
+	this.scanAngle = this.scanMin;
+	
+	this.currentDamage = 0;
+}
+
+//Almost in that corner? Then stop!
+if(this.closeToWall())
+{
+	this.drive(this.heading, 0);
+	
+	var range = this.scan(this.scanAngle, 5);
+	
+	if(range && range < 350)
+	{
+		this.cannon(this.scanAngle, range);
+	}
+	
+	this.scanAngle += 10;
+	
+	if(this.scanAngle > this.scanMax)
+	{
+		this.scanAngle = this.scanMin;
+	}
+}
+
+else
+{
+	this.drive(this.heading, 50);
+}
+
+//Change corner if got damage (from explosion or collision)
+if(this.currentDamage != this.damage())
+{
+	this.corner = this.getRandomCorner();
+	this.heading = this.getHeadingToXY(this.corner.x, this.corner.y);
+	this.drive(this.heading, 50);	//For quick getaway bug
+}
+
+this.currentDamage = this.damage();</textarea>
+	<textarea id="hunting_sniper" rows="25" cols="60">//HUNTING SNIPER
+//
+//Scans only if lost/no target.
+//Chases target and backs off if too close.
+//No collision detection to speak of.
+//Why not add some as a user exercise? ;-)
+//
+
+//Init
+if(!this.scanAngle)
+{
+	this.scanAngle = 0;
+}
+
+var range = this.scan(this.scanAngle, 5);
+
+//Have target
+if(range)
+{
+	this.cannon(this.scanAngle, range);
+	
+	if(range > 300)	//Move closer
+	{
+		this.drive(this.scanAngle, 75);
+	}
+	
+	else if(range < 200)	//Back off
+	{
+		this.drive(this.scanAngle, 0);
+		this.drive(this.scanAngle - 180, 100);
+	}
+}
+
+else	//Only change scanning angle if we've lost the target
+{
+	this.scanAngle += 10;
+}</textarea>
+	<textarea id="radius_guard" rows="25" cols="60">//RADIUS GUARD
+//
+//Walk around a circle protecting what's inside
+//the circle by shooting outwards if there's a target.
+//Change drive direction if hit a robot or wall
+//
+
+//Helper method
+this.closeToWall = function()
+{
+	var x = this.loc_x();
+	var y = this.loc_y();
+
+	if(x < 10 || x > 490)
+	{
+		return true;
+	}
+
+	if(y < 10 || y > 490)
+	{
+		return true;
+	}
+
+	return false;
+};
+
+//Init
+if(!this.walkAngle)
+{
+	this.walkAngle = 0;
+	this.angleInc = 3;
+	this.affector = 1;
+}
+
+//Scan current tangent (ie. drive angle minus 90) from centre of circle
+//[We need to *add* 90 when angleInc is negative (ie. moving anti-clockwise)]
+this.scanAngle = this.walkAngle + (90 * -this.affector);
+
+this.drive(this.walkAngle, 50);
+
+var range = this.scan(this.scanAngle, 10);
+
+//Have target
+if(range)
+{
+	this.cannon(this.scanAngle, range);
+}
+
+this.walkAngle += (this.angleInc * this.affector);
+
+if(this.speed() == 0 || this.closeToWall())	//Hit wall or robot
+{
+	//this.angleInc = -this.angleInc;
+	this.affector = -this.affector;
+	this.walkAngle -= 180;
+}
+
+if(this.speed() == 0)	//For quick getaway bug
+{
+	this.drive(this.walkAngle, 50);
+}</textarea>
+	<textarea id="perimeter_guard" rows="25" cols="60">//PERIMETER GUARD
+//
+//Walk back and forth across the same line
+//shooting anything more-or-less in front
+//and backtracking if hit another robots
+//
+
+//Helper method
+this.closeToWall = function()
+{
+	var x = this.loc_x();
+	var y = this.loc_y();
+
+	if(x < 10 || x > 490)
+	{
+		return true;
+	}
+
+	if(y < 10 || y > 490)
+	{
+		return true;
+	}
+
+	return false;
+};
+
+//Reverse driving angle by 180 degrees
+this.toggleAngle = function()
+{
+	if(this.currentAngle == this.startAngle)
+	{
+		this.currentAngle = this.returnAngle;
+	}
+	
+	else
+	{
+		this.currentAngle = this.startAngle;
+	}
+};
+
+//Init
+if(!this.startAngle)
+{
+	this.startAngle = rand(360);
+	this.returnAngle = this.startAngle - 180;
+	this.currentAngle = this.startAngle;
+}
+
+
+
+this.drive(this.currentAngle, 50);
+
+var range = this.scan(this.currentAngle, 10);
+
+//Have target
+if(range)
+{
+	this.cannon(this.currentAngle, range);
+}
+
+if(this.speed() == 0 || this.closeToWall())	//Hit wall or robot
+{
+	this.toggleAngle();
+}
+
+if(this.speed() == 0)	//For quick getaway bug
+{
+	this.drive(this.currentAngle, 50);
+}</textarea>
+	<textarea id="mosquito" rows="25" cols="60">//MOSQUITO
+//
+//A non-offensive robot that flies around randomly
+//like a lunatic
+//
+
+//Helper
+this.closeToCoord = function(coord)
+{
+	return (Math.abs(coord.x - this.loc_x()) < 20) && (Math.abs(coord.y - this.loc_y()) < 20);
+};
+
+this.getRandomCoord = function()
+{
+	return {x:rand(500), y:rand(500)};	//Object literal
+};
+
+this.getHeadingToXY = function(x, y)
+{
+	var heading;
+	
+	var curx = this.loc_x();
+	var cury = this.loc_y();
+	
+	var dx = curx - x;
+	var dy = cury - y;
+	
+	//atan() only returns -90 to +90, so figure out how to use
+	//the atan() value
+	if(dx == 0)	//x is zero, we either move due north or south
+	{
+		if(y > cury)
+		{
+			heading = 180;	//South
+		}
+		
+		else
+		{
+			heading = 0;	//North
+		}
+	}
+	
+	else
+	{
+		if(y < cury)
+		{
+			if(x > curx)
+			{
+				heading = atan(dy / dx);	//NORTH EAST
+			}
+			
+			else
+			{
+				heading = 180 + atan(dy / dx);	//NORTH WEST
+			}
+        }
+        
+        else
+        {
+        	if(x > curx)
+        	{
+        		heading = 360 + atan(dy / dx);	//SOUTH EAST
+        	}
+        	
+        	else
+        	{
+        		heading = 180 + atan(dy / dx);	//SOUTH WEST
+        	}
+        }
+    }
+    
+    return heading;
+};
+
+this.getCoordAndHeading = function()
+{
+	this.coord = this.getRandomCoord();
+	this.heading = this.getHeadingToXY(this.coord.x, this.coord.y);
+};
+
+//Init
+if(!this.coord)
+{
+	this.getCoordAndHeading();
+}
+
+this.drive(this.heading, 100);
+
+//Stop (and change coord) if close enough to desired coord
+//OR if we've hit another robot
+if(this.closeToCoord(this.coord) || this.speed() == 0)
+{
+	this.drive(this.heading, 0);	//Stop
+		
+	this.getCoordAndHeading();
+	this.drive(this.heading, 100);	//For quick getaway bug
+}</textarea>
+</div>
+
+<div class="grid_12">
+
+<button type="button" title="Show log output" onclick="toggleLogDisplay();"><img src="img/icon/application_osx_terminal.png" alt="Show log output"></button>
+
+<!--this is for the log() function - quite useful!-->
+<div id="console" style="display:none;"></div>
+
+</div>
+
+<div class="grid_12" id="footer">
+	<span style="float:right;">v0.91</span>Copyright &copy; 2009 - 2017 JS Robots
+</div>
+</div>
+</body>
+</html>

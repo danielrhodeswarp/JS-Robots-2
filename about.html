@@ -1,0 +1,123 @@
+<html>
+<head>
+
+<meta charset="utf-8">
+
+<!-- METAS HERE -->
+<!--
+$this->headMeta()->appendName('keywords', 'jsrobots, javascript, programming game, robots, upa, crobots, learn programming');
+$this->headMeta()->appendName('description', 'Historical and general information about JS Robots, a JavaScript programming game.');
+$this->headMeta()->appendName('author', 'Warp Asylum Ltd');
+-->
+
+<title>JS Robots - About</title>
+
+<link rel="stylesheet" type="text/css" href="css/960/960.css">
+<link rel="stylesheet" type="text/css" href="css/sitewide.css">
+
+<!-- SCRIPTS HERE -->
+
+</head>
+<body>
+<div class="container_12 pagecontent">
+
+<!-- CONTENT HERE -->
+<div class="grid_12">
+	<div class="grid_4 prefix_4 alpha centre">
+		<h1>About JS Robots</h1>
+	</div>
+	<div class="grid_3 prefix_1 omega textright">
+		<img src="img/icon/arrow_undo.png" alt="" class="imagefortextflow"><a href="index.html">back to game</a>
+	</div>
+</div>
+<div class="grid_12">
+<h2>What is JS Robots?</h2>
+<p>It's a JavaScript <em>reimagining</em> of Tom Poindexter's seminal <a href="http://corewar.co.uk/crobots">CROBOTS</a> game.
+You program a script to control a robot and then put your robot up to fight against other CPU or human controlled robots each with various scripts!</p>
+<h2>Is this going to work in my browser?</h2>
+<p>Famous last words perhaps but it's worked in every browser I've tested it with.
+Namely the latest versions of:</p>
+<ul>
+	<li>Chromium on Linux</li>
+	<li>Firefox on Linux</li>
+	<li>Opera on Linux</li>
+	<li>Chrome on Windows</li>
+	<li>Firefox on Windows</li>
+	<li>Internet Explorer on Windows</li>
+	<li>Opera on Windows</li>
+	<li>Safari on Windows</li>
+	<li>Dolphin Browser on Android (slow)</li>
+	<li>Opera Mobile on Android (super slow)</li>
+</ul>
+<p>Browsers vary wildy in their JavaScript performance and especially with HTML5 canvas.
+HTML5 audio performance varies most of all though, with some browsers not playing
+the sounds at all! (Though this might be because they are in WAV format...)</p>
+<h2>Release history</h2>
+<table> 
+<thead> 
+	<tr><th>Version</th><th>Date</th><th>Notes</th></tr> 
+</thead> 
+<tbody>
+	<tr><td>0.91</td><td>August 2017</td><td>Removed PasteBucket and Twitter calls. Removed Zend Framework. Removed "Contact us" and "Legal" from About page. Published on GitHub as JS-Robots-2.</td></tr>
+	<tr><td>0.9</td><td>March 2012</td><td>Site redesign using 960 grid system. HTML5 canvas and audio. Removed jQuery. Improved game control buttons. Improved game instructions.</td></tr>
+	<tr><td>0.9</td><td>June 2012</td><td>Added <a href="http://pastebucket.com">PasteBucket</a> publishing (and tweeting) option for winning human player scripts.</td></tr>
+	<tr><td>0.9</td><td>March 2012</td><td>Site redesign using 960 grid system. HTML5 canvas and audio. Removed jQuery. Improved game control buttons. Improved game instructions.</td></tr>
+	<tr><td>0.4gh</td><td>November 2011</td><td>First version of <a href="https://github.com/danielrhodeswarp/JS-Robots">JS Robots in GitHub</a>. Essentially as v0.85 minus any Twitter functionality and packaged to work purely from local files in the browser.</td></tr>
+	<tr><td>0.85</td><td>October 2011</td><td><a href="http://twitter.com/jsrobots">Twitter hall of fame</a> working again. It had stopped working since Twitter moved to oAuth only (which was a very long time ago!).</td></tr>
+	<tr><td>0.8</td><td>July 2011</td><td>Mostly cosmetic / internal revamp.
+	<ul>
+	<li>Now using HTML5 for text markup (but not using <a href="http://www.html5canvastutorials.com/">HTML5 canvas</a> for drawing onto the arena - though
+	this is a great TODO!)</li>
+	<li><a href="http://framework.zend.com">Zend Framework</a> now going on (very arbitrarily) in the background as a bit of personal practice.</li>
+	<li>Now on jQuery 1.6.2, although I see that this is quite a bit fatter than 1.3.2! jQuery is used for
+	things like arena element sizing and auto onloading.</li>
+	<!-- <li>Trashed the Twitter hall of fame (though I might get back to this as an onsite thing)</li>-->
+	</ul>
+	</td></tr> 
+	<tr><td>0.75</td><td>4 August 2009</td><td>Fixed start / stop button bug. Added <a href="http://twitter.com/jsrobots">Twitter hall of fame</a> entry for winning players.</td></tr> 
+	<tr><td>0.7</td><td>2 August 2009</td><td>First public version. Contains <em>quick getaway</em> and <em>jitterbug</em> bugs.</td></tr>
+</tbody> 
+</table>
+<h2>TODO</h2>
+<ul>
+	<li><span class="linethrough">HTML5 canvas</span> [done!]</li>
+	<li>Concurrency, concurrency, concurrency! (Web Workers? NodeJS?)</li>
+	<li>Some kind of sandbox for robot script development / debugging...?</li>
+</ul>
+<h2>Bugs</h2>
+<p>There's a pretty irritating bug which we call the <em>quick getaway bug</em>.
+Basically, if your robot's speed is zero due to colliding with another robot, then
+you need to drive() away as soon as possible in the code rather than waiting for the next iteration.
+See the presets for examples.</p> 
+<p>Possibly related to the above, there's also the <em>jitterbug bug</em>.
+A robot will <em>occasionally</em> jitter back and forth when in front of a wall or other robot.</p> 
+<p><span class="linethrough">Another irritating bug is that starting the game again after a stop or game win <em>isn't</em> perfect unfortunately.
+Best to reload the URL</span> [fixed!]</p> 
+<h2>Behind the site</h2>
+<ul>
+	<li><a href="http://naioo.com/blog/rss-robot-icon"><em>Cute robot</em> icon</a> as used for the game sprites and favicon is by Henning at the wonderful <a href="http://naioo.com/blog/">naioo.com blog</a>.
+	I really like this kind of "future cute" style!</li>
+	<li>Icons on buttons and links are from the rather excellent <a href="http://famfamfam.com">Famfamfam</a> icon sets</li>
+	<li>Top left planet is a public domain image by NASA simulating what an ice age on mars might look like</li>
+	<li>Bottom most image is a public domain image by NASA of an actual martian landscape</li>
+	<li>Gradient between the above two images was knocked up by myself using HTML5 canvas (and Firefox's "Save Image As" capability on HTML5 canvases!)</li>
+	<li>CSS3 stretches the martian landscape image to fit the browser width</li>
+	<li>Sounds are from <a href="http://soungle.com">soungle.com</a> which is a search engine for royalty free sound effects</li>
+	<li>The robots and their weaponry are animated using HTML5 canvas</li>
+	<li>The arena background is a colourised picture of a <a href="http://www.google.com/mars/">Google Mars</a> snippet</li>
+	<li>The site is laid out using <a href="http://960.gs/">960 grid system</a></li>
+</ul>
+<h2>Other bits and bobs</h2>
+<p>The <a href="http://programminggames.org/">Programming Games Wiki</a> is a very
+comprehensive review of programming games past and present. JS Robots is listed!</p>
+<p><img src="img/html5-badge-h-css3-graphics-multimedia.png" alt="HTML5 Powered with CSS3 / Styling, Graphics, 3D &amp; Effects, and Multimedia" title="HTML5 Powered with CSS3 / Styling, Graphics, 3D &amp; Effects, and Multimedia"></p>
+<p><img src="img/vcss.gif" alt="Valid CSS level 3" title="Valid CSS level 3"></p>
+
+</div>
+
+<div class="grid_12" id="footer">
+	<span style="float:right;">v0.91</span>Copyright &copy; 2009 - 2017 JS Robots
+</div>
+</div>
+</body>
+</html>

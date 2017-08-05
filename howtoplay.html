@@ -1,0 +1,652 @@
+<html>
+<head>
+
+<meta charset="utf-8">
+
+<!-- METAS HERE -->
+<!--
+$this->headMeta()->appendName('keywords', 'jsrobots, javascript, programming game, robots, upa, crobots, learn programming');
+$this->headMeta()->appendName('description', 'Gameplay information and rules for JS Robots, a JavaScript programming game.');
+$this->headMeta()->appendName('author', 'Warp Asylum Ltd');
+-->
+
+<title>JS Robots - How to play</title>
+
+<link rel="stylesheet" type="text/css" href="css/960/960.css">
+<link rel="stylesheet" type="text/css" href="css/sitewide.css">
+
+<!-- SCRIPTS HERE -->
+
+</head>
+<body>
+<div class="container_12 pagecontent">
+
+<!-- CONTENT HERE -->
+<div class="grid_12">
+	<div class="grid_4 prefix_4 alpha centre">
+		<h1>How to play JS Robots</h1>
+	</div>
+	<div class="grid_3 prefix_1 omega textright">
+		<img src="img/icon/arrow_undo.png" alt="" class="imagefortextflow"><a href="index.html">back to game</a>
+	</div>
+</div>
+<div class="grid_12">
+
+<h2>What is JS Robots?</h2> 
+<p>It's a JavaScript <em>reimagining</em> of Tom Poindexter's seminal <a href="http://corewar.co.uk/crobots">CROBOTS</a> game.
+You program a script to control a robot and then put your robot up to fight against other CPU or human controlled robots each with various scripts!</p> 
+
+<h2>Quick start</h2> 
+<ul> 
+	<li>You need at least two robot players to battle (CPU and / or Human - it doesn't matter)</li> 
+	<li>Tick the checkboxes to enable various robots</li> 
+	<li>CPU robots must use one of the preset scripts</li> 
+	<li>Human players can create a script from scratch, use a preset or edit a preset</li> 
+	<li>Press the play button!</li> 
+</ul>
+
+<h2>Game arena and buttons</h2>
+<img src="img/arena_and_buttons.gif" alt="">
+<ul>
+	<li>The top left button toggles the sound on or off.
+	Note that depending on your browser / operating system you might not get sounds
+	anyway :-(
+	</li>
+	<li>The restart button starts a fresh game and will pick up any changes
+	to the selected robot scripts
+	</li>
+	<li>The top right button starts the very first game and also pauses / resumes
+	the current game
+	</li>
+	<li>Your robot will get damaged if an explosion touches it or if it hits
+	the edge of the arena or another robot
+	</li>
+</ul>
+
+
+<h2>Robot script tutorial</h2>
+<h3>OK, let's write our first JS Robots script!</h3>
+<p>Let's write a robot that scans clockwise incrementally and launches a missile
+at any target found. Let's also move closer to the target if it far away and
+move away from the target if it is close.</p>
+<p>Right, here's how we scan clockwise incrementally (and nothing else!):</p>
+<code class="block">if(!this.scanAngle)	//ie. first time round
+{
+	this.scanAngle = 0;	//initial value
+}
+
+//scan() returns false if nothing in scan line OR
+//an integer representing the distance to the CLOSEST
+//robot in the scan line 
+var range = this.scan(this.scanAngle, 5);	//variance of +/- 5 degrees
+
+//Have target
+if(range)
+{
+	//fire missile and move closer / away as necessary
+}
+
+this.scanAngle += 10;	//move scanner 10 degrees clockwise
+</code>
+<p>We save the scanAngle variable to <em>this</em> (which means the robot)
+because we want to remember the value between iterations - so that we can increment it.
+We dont save the range variable to <em>this</em> because it's a throwaway value
+that is going to change each iteration anyway.</p>
+<p>Note how we initialise the scanAngle variable by checking for its existence and,
+if it doesn't exist, creating it and setting its initial value.</p>
+<p>Then we use the robot's scan() method to scan for enemy robots. We specify a
+variance of 5 degrees so, in this instance, we are actually scanning from
+355 to 5 degrees.
+The scan() method returns false if no enemy robots were detected, and so
+<code>if(range){/*do something*/}</code> is a code block that executes when we
+DO have an enemy robot in sight. We'll come back to this code block.</p>
+<p>Finally, we increment the scan angle by 10 degrees.</p>
+<p>If you run this script as a player in the game (perhaps against a single,
+harmless CPU player), you can see that the "Scan" on the human player statistics table
+is counting up as we would expect.</p>
+
+<h3>Adding some firepower!</h3>
+<p>At the minute we're just standing still and scanning around. We're a sitting duck!
+Let's launch a missile at any enemy robots we detect with our scan.</p>
+<p>Add to the code block we just talked about so that it looks like this:</p>
+<code class="block">//Have target
+if(range)
+{
+	this.cannon(this.scanAngle, range);
+}
+</code>
+<p>With the cannon() method we can launch a missile at the specified angle
+and with the specified range (distance). The missile will travel at the given angle for the
+given range and then explode.</p>
+<p>What we do here is launch a missile at the current scanAngle and with
+the range as returned previously by scan(). Scan() gives use the <em>exact</em>
+range to the closest enemy robot BUT don't forget that we scanned with 5 degrees
+of variance and so the enemy robot might not be exactly at scanAngle! The enemy robot
+will no doubt be zipping around like a maniac too!</p>
+<p>Your full script should now look like this:</p>
+<code class="block">if(!this.scanAngle)	//ie. first time round
+{
+	this.scanAngle = 0;	//initial value
+}
+
+//scan() returns false if nothing in scan line OR
+//an integer representing the distance to the CLOSEST
+//robot in the scan line 
+var range = this.scan(this.scanAngle, 5);	//variance of +/- 5 degrees
+
+//Have target
+if(range)
+{
+	this.cannon(this.scanAngle, range);
+}
+
+this.scanAngle += 10;	//move scanner 10 degrees clockwise
+</code>
+<p>If you run this script as a player in the game you can see that it is standing still
+and scanning incrementally as before, but will now launch a missile if any enemy
+robot is detected in its scan.
+</p>
+
+<h3>Put your left leg in, your right leg out...</h3>
+<p>We can attack now, be we still don't move and so we're still a sitting duck!
+Let's move closer to or away from any found target based on its distance from us.
+Add to the <code>if(range)</code> code block so that it looks like this:
+</p>
+<code class="block">//Have target
+if(range)
+{
+	this.cannon(this.scanAngle, range);
+	
+	if(range > 300)	//Move closer
+	{
+		this.drive(this.scanAngle, 75);
+	}
+	
+	else if(range &lt; 200)	//Back off
+	{
+		this.drive(this.scanAngle, 0);
+		this.drive(this.scanAngle - 180, 100);
+	}
+}
+</code>
+<p>We launch the missile as before. This time though we drive! The range variable
+(from our prior call to scan() if you remember) is the distance from us to the closest
+enemy robot. We drive differently depending on the value of this.
+If the enemy robot is more than 300 units away, we drive - at scanAngle - with 75%
+engine power. If the enemy robot is less than 200 units away, we do two things.
+First, because changes in direction can only be negotiated at speeds of less than 50%,
+we stop by driving with an engine power of zero. Then we drive in the direction <em>opposite</em>
+to scanAngle by using scanAngle - 180. We drive away at 100% engine power.
+</p>
+<p>Extra credit if you've realised that there's an implied case of the enemy robot
+being between 200 and 300 (inclusive) units away. In this case, the robot does
+not move because we haven't specified so.</p>
+<p>Your full script should now look like this:</p>
+<code class="block">if(!this.scanAngle)	//ie. first time round
+{
+	this.scanAngle = 0;	//initial value
+}
+
+//scan() returns false if nothing in scan line OR
+//an integer representing the distance to the CLOSEST
+//robot in the scan line 
+var range = this.scan(this.scanAngle, 5);	//variance of +/- 5 degrees
+
+//Have target
+if(range)
+{
+	this.cannon(this.scanAngle, range);
+	
+	if(range > 300)	//Move closer
+	{
+		this.drive(this.scanAngle, 75);
+	}
+	
+	else if(range &lt; 200)	//Back off
+	{
+		this.drive(this.scanAngle, 0);
+		this.drive(this.scanAngle - 180, 100);
+	}
+}
+
+this.scanAngle += 10;	//move scanner 10 degrees clockwise
+</code>
+
+<p>If you run this script as a player in the game you can see that it is
+launching missiles and scanning incrementally as before, but will now move
+occasionally if the scanned enemy robot is very close or very far.
+</p>
+
+<h3>Finishing touches</h3>
+<p>Our robot is pretty cool now! It could be much cooler though.
+Have you noticed that it isn't attacking very often? Because it increments
+the scanAngle even if a target has been found, acquired targets are very quickly
+lost.</p>
+<p>Let's "lock" the scanAngle if we have a target so that we can keep
+pummelling the enemy robot! Replace the very last line of the script with this:</p>
+<code class="block">else	//Only change scanning angle if we've lost the target
+{
+	this.scanAngle += 10;
+}
+</code>
+<p>With this, we do our attacking and moving for acquired targets as before BUT increment
+the scanAngle only if no targets were found.</p>
+<p>Your full script should now look like this:</p>
+<code class="block">if(!this.scanAngle)	//ie. first time round
+{
+	this.scanAngle = 0;	//initial value
+}
+
+//scan() returns false if nothing in scan line OR
+//an integer representing the distance to the CLOSEST
+//robot in the scan line 
+var range = this.scan(this.scanAngle, 5);	//variance of +/- 5 degrees
+
+//Have target
+if(range)
+{
+	this.cannon(this.scanAngle, range);
+	
+	if(range > 300)	//Move closer
+	{
+		this.drive(this.scanAngle, 75);
+	}
+	
+	else if(range &lt; 200)	//Back off
+	{
+		this.drive(this.scanAngle, 0);
+		this.drive(this.scanAngle - 180, 100);
+	}
+}
+
+else	//Only change scanning angle if we've lost the target
+{
+	this.scanAngle += 10;
+}
+</code>
+<p>If you run this script as a player in the game you can see that it is
+moving and launching missiles as before, but will now stay with the same target
+for longer and <em>stalk</em> enemy robots more aggressively.
+</p>
+<p>By the way congratulations, you have just wrote the <strong>Hunting Sniper</strong> robot! ;-)</p>
+<p>Be sure to check the other robot presets for more ideas. You'll also want
+to check the below API reference to make a real killer robot!</p>
+
+<h2>Robot scripting notes</h2> 
+<ol>
+<li>
+<p class="important">Unfortunately, and this makes the game less playable and usable than it should
+really be, robot scripts do not operate concurrently. Rather, each playing robot's
+script executes once all the way through and then the next robot gets a turn
+and so on. This sucks - and is not how the original CROBOTS operates - because
+looping becomes unfair / impossible. Also, a longer script that attacks twice
+and moves twice will tend to always beat a script that only moves and attacks once
+BECAUSE the longer script is effectively getting more CPU time.</p>
+<p>We are working on this (see the <a href="about.html">about</a> page), but for the time being the following types
+of script should not be used:</p>
+<ul>
+<li><p><strong>Conditional / endless while loops</strong> for example:</p>
+<code class="block">//Init
+if(!this.coord)
+{
+	this.coord = this.funcToGetACoord();
+	this.heading = this.funcToGetHeadingForCoord(this.coord);
+	this.finished = false;
+}
+
+//move to this.coord and then simply stop
+while(!this.finished)
+{
+	this.drive(this.heading, 100);
+
+	//Stop if close enough to desired coord
+	if(this.funcToSeeIfCloseToCoord(this.coord))
+	{
+		this.drive(this.heading, 0);	//Stop
+		this.finished = true;
+	}
+
+	//get new heading to coord if we have stopped for some reason
+	else if(this.speed() == 0)
+	{
+		this.heading = this.funcToGetHeadingForCoord(this.coord);
+		this.drive(this.heading, 100);	//For quick getaway bug
+	}
+}
+</code>
+<p>What will happen here is that <em>all</em> of this script will execute
+on this robot's turn. The robot will indeed move to the initialised coordinate,
+but will do so in the blink of an eye and will not actually appear to move! We are
+basically hogging CPU time with this kind of loop. If you're feeling brave you can
+modify the mosquito script to behave like this and you can see for yourself
+how it doesn't move (but it has actually gone to the initialised coordinate).</p>
+</li>
+<li>
+<p><strong>For loops</strong> for example:</p>
+<code class="block">//Init
+if(!this.coord)
+{
+	this.coord = {x:250, y:250};
+	this.heading = this.funcToGetHeadingForCoord(this.coord.x, this.coord.y);
+	this.arrived = false;
+	this.firedAlready = false;
+}
+
+if(!this.arrived)
+{
+	this.drive(this.heading, 100);
+
+	//Stop if close enough to desired coord
+	if(this.funcToSeeIfCloseToCoord(this.coord) )
+	{
+		this.drive(this.heading, 0);	//Stop
+		this.arrived = true;
+	}
+
+	//get new heading if we stopped for whatever reason
+	else if(this.speed() == 0)
+	{
+		this.heading = this.funcToGetHeadingForCoord(this.coord.x, this.coord.y);
+		this.drive(this.heading, 100);	//For quick getaway bug
+	}
+}
+
+else if(!this.firedAlready)	//arrived so go wild (once!)
+{
+	//sweep around and fire at different ranges for each angle
+	for(var angle = 0; angle &lt; 360; angle += 5)
+	{
+		for(var range = 50; range &lt; 250; range += 10)
+		{
+			var fired = this.cannon(angle, range);
+		}
+	}
+
+	this.firedAlready = true;
+}
+</code>
+<p>What we do here is drive to the centre of the arena normally. We then use a couple
+of for loops to launch missiles everywhere! We loop through a full circle and also
+we loop through some different ranges for each angle of the circle. Luckily
+missiles take a few turn to reload and so we only manage to get one off, but we
+very definitely hog the CPU here. We could also be doing something other than firing
+in the loops - scanning for the next target for example. Unfair!</p>
+</li>
+<li>
+<p><strong>Doing lots in one script</strong> for example:</p>
+<code class="block">//init
+var scanAngle = rand(360);
+var fired = false;
+
+var range = this.scan(scanAngle, 5);
+if(range && !fired)
+{
+	this.cannon(scanAngle, range);
+	fired = true;
+}
+
+this.scanAngle += 10;
+var range = this.scan(scanAngle, 5);
+if(range && !fired)
+{
+	this.cannon(scanAngle, range);
+	fired = true;
+}
+
+this.scanAngle += 10;
+var range = this.scan(scanAngle, 5);
+if(range && !fired)
+{
+	this.cannon(scanAngle, range);
+	fired = true;
+}
+
+this.scanAngle += 10;
+var range = this.scan(scanAngle, 5);
+if(range && !fired)
+{
+	this.cannon(scanAngle, range);
+	fired = true;
+}
+</code>
+<p>Here we hog the CPU by scanning and firing multiple times in one iteration.</p>
+</li>
+</ul>
+</li>
+
+<li>
+<p>To debug your robot script, you may use the log() function thus:</p>
+<code class="block">log('some string');
+log(this.someVariable);
+log(this.loc_x());
+</code>
+</li>
+
+<li>
+<p>To remember things between iterations, save it to a member variable thus:
+<code>this.somethingToRemember = whatever();</code></p> 
+</li> 
+
+<li>
+<p>Robot object methods are documented (below) and internal housekeeping methods / members
+are prefixed with a '_' [underscore]. Avoid these names for methods and variables in your own scripts and you will be fine.</p> 
+</li>
+ 
+<li>
+<p>In your robot script, any and all JavaScript functions / objects / methods are available.
+The static methods of the Math object might be especially useful.
+Take a look at the <a href="http://devguru.com/technologies/javascript/home.asp">JavaScript guide on DevGuru</a>.
+Be sure you don't, for example, alert() anything out though because it will end in tears!
+</p>
+</li>
+
+<li>
+<p>You can define a reusable method for your robot thus:<br/> 
+<code class="block"> 
+//Define
+this.reusableMethod = function(speed)
+{
+	this.whatever = something();
+	this.drive(90, speed);
+}<span class="reverso">;</span> 
+ 
+this.scan(this.scanAngle, 5);	//Other stuff here
+ 
+//Use
+this.reusableMethod(100);
+</code> 
+<br/> 
+A semicolon after the method definition is required.
+</p> 
+</li>
+</ol>
+
+<h2>Arena environment</h2> 
+<p>Overview:</p> 
+<ol> 
+	<li>Arena size</li> 
+	<li>Coordinate system</li> 
+	<li>Compass system</li> 
+</ol> 
+<p>Details:</p> 
+<ol> 
+	<li>The arena is a square of 500 units by 500 units</li> 
+	<li>The top-left of the arena is (0,0). The bottom-right is (499,499).</li> 
+	<li>The compass system is oriented so that due north (up) is 0 degrees, 90 is east,
+	180 is south, 270 is west. One degree west (left) of due north is 359.
+	<pre> 
+	                         315    0    45
+	                             \  |  /
+	                              \ | /
+	                        270 --- x --- 90
+	                              / | \
+	                             /  |  \
+	                         225   180   135
+	</pre> 
+	</li> 
+</ol> 
+
+<h2>Damage table</h2> 
+<p>Damage accumulates thus:</p> 
+ 
+<table> 
+<thead> 
+	<tr><th>Case</th><th>Damage</th></tr> 
+</thead> 
+<tbody> 
+	<tr><td>Hit wall</td><td>2 (and speed down to zero)</td></tr> 
+	<tr><td>Hit other robot</td><td>2 each (and speed down to zero)</td></tr> 
+	<tr><td>Caught in explosion</td><td>10</td></tr> 
+</tbody> 
+</table>
+
+<h2>Robot script API reference</h2> 
+<h3>Per robot methods</h3> 
+<p>Need to prefix these with <em>this.</em></p> 
+<ul> 
+<li> 
+	<strong>scan(degree, resolution)</strong> 
+	<br/> 
+	The scan() method scans for enemy robots at the specified degree and resolution.
+	scan() returns false if no robots are within the scan line
+	or a positive integer representing the distance to the <em>closest</em> robot.
+	Degree should be within the range 0-359, otherwise degree is forced into 0-359 by a modulo 360 operation, and made positive if necessary.
+	Resolution controls the scanner's sensing resolution, up to +/- 10 degrees.
+	<br/><br/>Examples:<br/> 
+	<code class="block"> 
+var range = this.scan(45, 0);	//Scan the 45 degree line, with no variance
+var range = this.scan(365, 10);	//Scans the lines from 355 degs to 15 degs
+	</code> 
+</li> 
+<li> 
+	<strong>cannon(degree, range)</strong> 
+	<br/> 
+	The cannon() method fires a missile heading in the specified range and direction.
+	cannon() returns true if a missile was fired, or false if the cannon is reloading.
+	Degree is forced into the range 0-359 as in scan().
+	Range can be 0-350, with greater ranges truncated to 350.
+	<br/><br/>Examples:<br/> 
+	<code class="block"> 
+var degree = 45;	//Set a direction to test
+ 
+if((var range = this.scan(degree, 2)) != false)	//See if a target is there
+{
+	this.cannon(degree, range);	//Fire a missile
+}
+	</code> 
+</li> 
+<li> 
+	<strong>drive(degree, speed)</strong> 
+	<br/> 
+	The drive() method activates the robot's drive mechanism, on the specified heading and speed.
+	Degree is forced into the range 0-359 as in scan().
+	Speed is expressed as a percent, with 100 as maximum.
+	A speed of 0 disengages the drive.
+	Changes in direction can be negotiated at speeds of less than 50 percent.
+	<br/><br/>Examples:<br/> 
+	<code class="block"> 
+this.drive(0, 100);	//Head due north, at maximum speed
+this.drive(90, 0);	//Stop motion
+	</code> 
+</li> 
+<li> 
+	<strong>damage()</strong> 
+	<br/> 
+	The damage() method returns the current amount of damage incurred.
+	damage() takes no arguments, and returns the integer percent of damage, 0-99.
+	(100 percent damage means the robot is completely disabled, thus no longer running!)
+	<br/><br/>Examples:<br/> 
+	<code class="block"> 
+var d = this.damage();	//Save current state
+; ; ;				//Other instructions
+if(d != this.damage())	//Compare current state to prior state
+{
+	this.drive(90, 100);	//Robot has been hit, start moving
+	d = this.damage();	//Get current damage again
+}
+	</code> 
+</li> 
+<li> 
+	<strong>speed()</strong> 
+	<br/> 
+	The speed() method returns the current speed of the robot.
+	speed() takes no arguments, and returns the integer percent of speed, 0-100.
+	Note that speed() may not always be the same as the last drive(), because of acceleration and deacceleration.
+	<br/><br/>Examples:<br/> 
+	<code class="block"> 
+this.drive(270, 100);	//Start drive, due west full speed
+; ; ;				//Other instructions
+if(this.speed() == 0)	//Check current speed
+{
+	this.drive(90, 20);	//Ran into the west wall, or another robot so backtrack east
+}
+	</code> 
+</li> 
+<li> 
+	<strong>loc_x() and loc_y()</strong> 
+	<br/> 
+	The loc_x() method returns the robot's current x axis location.
+	loc_x() takes no arguments, and returns an integer in the range 0-499.
+	The loc_y() method is similar to loc_x(), but returns the current y axis position.
+	<br/><br/>Examples:<br/> 
+	<code class="block"> 
+if(this.loc_y() > 20)
+{
+	this.drive(0, 50);	//Start heading for north wall
+}
+ 
+else
+{
+	this.drive(0, 0);		//Stop drive
+}
+	</code> 
+</li> 
+</ul> 
+<h3>Utility functions</h3> 
+<ul> 
+<li> 
+	<strong>rand(limit)</strong> 
+	<br/> 
+	Returns a random integer between zero and limit (exclusive).
+</li> 
+<li> 
+	<strong>sqrt(number)</strong> 
+	<br/> 
+	Returns the square root of a number. Number is made positive if necessary.
+</li> 
+<li> 
+	<strong>sine(degree)</strong> 
+	<br/> 
+	Returns the trigometric sine of degree (degree being an integer from zero to 359).
+</li> 
+<li> 
+	<strong>cosine(degree)</strong> 
+	<br/> 
+	Returns the trigometric cosine of degree (degree being an integer from zero to 359).
+</li> 
+<li> 
+	<strong>tan(degree)</strong> 
+	<br/> 
+	Returns the trigometric tangent of degree (degree being an integer from zero to 359).
+</li> 
+<li> 
+	<strong>atan(ratio)</strong> 
+	<br/> 
+	Returns the integer degree value, between -90 and +90, of the ratio.
+</li> 
+</ul> 
+ 
+ 
+ 
+ 
+
+ 
+
+</div>
+
+<div class="grid_12" id="footer">
+	<span style="float:right;">v0.91</span>Copyright &copy; 2009 - 2017 JS Robots
+</div>
+</div>
+</body>
+</html>
